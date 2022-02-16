@@ -42,14 +42,14 @@ function App() {
   return (
     <div className="App">
       <div className="App-header">
-        <h1>Select Your Hometown</h1>
+        <h1>เลือกเมืองเกิดของคุณ</h1>
         <div>
           <select
             onChange={(e) => fetchCities(e.target.value)}
             value={singleCountry}
           >
             <option disabled selected hidden>
-              Select Country
+             เลือกประเทศ
             </option>
             {countries &&
               countries.map((country) => (
@@ -65,7 +65,7 @@ function App() {
               value={singleCity}
             >
               <option disabled selected hidden>
-                Select City
+                เลือกเมืองเกิด
               </option>
 
               {cities.map((city) => (
@@ -75,11 +75,11 @@ function App() {
               ))}
             </select>
           )}
-          <button onClick={submitHandle}>Go</button>
+          <button onClick={submitHandle}>แสดง</button>
         </div>
         {submit && (
           <h3>
-            Your country is {singleCountry} and your city is {singleCity}
+            ประเทศของคุณคือ {singleCountry} และเมืองของคุณคือ {singleCity}
           </h3>
         )}
       </div>
