@@ -1,23 +1,88 @@
-import logo from './logo.svg';
-import './App.css';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
+  const [countries, setCountries] = useState([]);
+  const [singleCountry, setSingleCountry] = useState("");
+  const [cities, setCities] = useState(null);
+  const [singleCity, setSingleCity] = useState("");
+  const [submit, setSubmit] = useState(false);
+
+  const fetchCountries = async () => {
+    try {
+      const country = await axios.get(
+        "https://countriesnow.space/api/v0.1/countries"
+      );
+      setCountries(country.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchCities = (country) => {
+    setSubmit(false)
+    setSingleCity(null)
+
+    setSingleCountry(country);
+    const findCities = countries.find((c) => c.country === country);
+    setCities(findCities.cities);
+  };
+
+  const submitHandle = () => {
+    if (singleCountry && singleCity) {
+      setSubmit(true);
+    }
+  };
+
+  useEffect(() => {
+    fetchCountries();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="App-header">
+        <h1>Select Your Hometown</h1>
+        <div>
+          <select
+            onChange={(e) => fetchCities(e.target.value)}
+            value={singleCountry}
+          >
+            <option disabled selected hidden>
+              Select Country
+            </option>
+            {countries &&
+              countries.map((country) => (
+                <option key={`${country.country}`} value={country.country}>
+                  {country.country}
+                </option>
+              ))}
+          </select>
+
+          {cities && (
+            <select
+              onChange={(e) => setSingleCity(e.target.value)}
+              value={singleCity}
+            >
+              <option disabled selected hidden>
+                Select City
+              </option>
+
+              {cities.map((city) => (
+                <option value={city} key={city}>
+                  {city}
+                </option>
+              ))}
+            </select>
+          )}
+          <button onClick={submitHandle}>Go</button>
+        </div>
+        {submit && (
+          <h3>
+            Your country is {singleCountry} and your city is {singleCity}
+          </h3>
+        )}
+      </div>
     </div>
   );
 }
